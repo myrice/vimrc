@@ -7,10 +7,17 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-Plugin 'fatih/vim-go'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'scrooloose/nerdtree.git'
+" Plugin 'fatih/vim-go'
+" Plugin 'Valloric/YouCompleteMe'
+Plugin 'preservim/nerdtree.git'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'jistr/vim-nerdtree-tabs.git'
+
+Plugin 'easymotion/vim-easymotion'
+
+Bundle 'solarnz/thrift.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 
 
 " All of your Plugins must be added before the following line
@@ -33,7 +40,11 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:godef_split=3
+"let g:go_gopls_enabled = 0
 "全局设置
+
+set laststatus=2 "总是显示状态栏
+set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
 
 set nu
 "相对行号
@@ -113,12 +124,44 @@ nmap <Leader>wq :wq!<CR>
 imap <leader>jj <ESC>
 map <C-n> :NERDTreeToggle<CR>
 
+"直接vim 打开NERDTree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+"autocmd vimenter * NERDTree
 " NERDTree箭头
-let g:NERDTreeDirArrowExpandable = '>'
-let g:NERDTreeDirArrowCollapsible = '开'
+"let g:NERDTreeDirArrowExpandable = '>'
+"let g:NERDTreeDirArrowCollapsible = '开'
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+                \ 'Modified'  :'✹',
+                \ 'Staged'    :'✚',
+                \ 'Untracked' :'✭',
+                \ 'Renamed'   :'➜',
+                \ 'Unmerged'  :'═',
+                \ 'Deleted'   :'✖',
+                \ 'Dirty'     :'✗',
+                \ 'Ignored'   :'☒',
+                \ 'Clean'     :'✔︎',
+                \ 'Unknown'   :'?',
+                \ }
+nmap <Leader>f :NERDTreeFind<CR>
+"let g:NERDTreeShowIgnoredStatus = 1
 
 "inoremap <C-h> <Left>
 "inoremap <C-j> <Down>
 "inoremap <C-k> <Up>
 "inoremap <C-l> <Right>
 
+"easymotion
+map <Leader><leader>h <Plug>(easymotion-linebackward)
+map <Leader><leader>l <Plug>(easymotion-lineforward)
+" 重复上一次操作, 类似repeat插件, 很强大
+map <Leader><leader>. <Plug>(easymotion-repeat)
+
+"切换git blame模式
+nmap <Leader>b :Gblame<CR>
+
+"coc相关快捷键
+map <leader>d <Plug>(coc-definition)    
+map <leader>f <Plug>(coc-references)    
+map <leader>r <Plug>(coc-rename)    
+map <leader>a :CocAction<cr>
